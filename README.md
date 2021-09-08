@@ -1,10 +1,11 @@
-# Getting Started with Create React App
+# Waldo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A "Where's Waldo"-inspired photo-tagging app for The Odin Project curriculum.
 
-## Available Scripts
+## Live Demo
 
-In the project directory, you can run:
+Hosted with Firebase
+- https://waldo-db4e8.web.app/
 
 ### `npm start`
 
