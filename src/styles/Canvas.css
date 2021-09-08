@@ -1,0 +1,29 @@
+.canvasMarginDiv {
+
+}
+
+.canvasDiv {
+    height: 470px;
+    width: 960px;
+    background-color: aqua;
+
+}
+
+.photo {
+    position: relative;
+}
+
+.targetBox {
+    height: 20px;
+    width: 20px;
+    border: solid black 2px;
+    position: absolute;
+    display: none;
+}
+
+.targetsDropdown {
+    border: solid black 2px;
+    position: absolute;
+    display: none;
+}
+
