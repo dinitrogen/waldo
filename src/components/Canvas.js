@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import fruit from '../img/fruit.jpg';
+import { app, db, collection, getDocs } from '../firebase';
+
+
+
 
 const fruitCoords = {
     option0: {
@@ -34,6 +38,8 @@ const fruitCoords = {
 
 const Canvas = () => {
     
+    const [testMessage, setTestMessage] = useState('');
+
     const [mouseCoordX, setMouseCoordX] = useState(0);
     const [mouseCoordY, setMouseCoordY] = useState(0);
     const [object, setObject] = useState('option0');
@@ -49,13 +55,19 @@ const Canvas = () => {
         }
     });
 
+    // Testing firestore
+    async function waldoTest() {
+        const querySnapshot = await getDocs(collection(db, "waldo-test"));
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data().name);
+            setTestMessage(doc.data().name)
+        });
+    }
+   
+    useEffect(() => {
+        waldoTest();
+    }, [])
 
-    // useEffect(() => {
-    //     if (object !== 'option0') {
-    //         checkTarget(object);
-    //     }
-
-    // }, [object])
 
     useEffect(() => {
         checkFoundList();
@@ -144,6 +156,7 @@ const Canvas = () => {
                 </select>
 
             </div>
+            <div>{testMessage}</div>
         </div>
     )
                     
