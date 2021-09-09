@@ -2,6 +2,13 @@ import React, {useEffect, useState} from 'react';
 import fruit from '../img/fruit.jpg';
 
 const fruitCoords = {
+    option0: {
+        name: 'none',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0
+    },
     option1: {
         name: 'avocado',
         left: 275,
@@ -29,17 +36,41 @@ const Canvas = () => {
     
     const [mouseCoordX, setMouseCoordX] = useState(0);
     const [mouseCoordY, setMouseCoordY] = useState(0);
-    const [object, setObject] = useState('option1');
+    const [object, setObject] = useState('option0');
+    const [foundObjects, setFoundObjects] = useState({
+        option1: {
+            isFound: false
+        },
+        option2: {
+            isFound: false
+        },
+        option3: {
+            isFound: false
+        }
+    });
 
+
+    // useEffect(() => {
+    //     if (object !== 'option0') {
+    //         checkTarget(object);
+    //     }
+
+    // }, [object])
 
     useEffect(() => {
-        checkTarget(object);
+        checkFoundList();
+    });
 
-    })
-
+    const checkFoundList = () => {
+        if (foundObjects.option1.isFound === true && foundObjects.option2.isFound === true && foundObjects.option3.isFound === true) {
+            console.log('you win!');
+        } else {
+            return;
+        }
+    }
 
     const drawTargetBox = (event) => {
-        console.log(event.target);
+        // console.log(event.target);
         if (event.target === document.querySelector('select')) {
             return;
         }
@@ -47,7 +78,7 @@ const Canvas = () => {
         // let canvasBox = event.target.getBoundingClientRect();
         let mouseCoordX = (event.clientX > canvasBox.right) ? canvasBox.right : event.clientX - canvasBox.left;
         let mouseCoordY = (event.clientY > canvasBox.bottom) ? canvasBox.bottom : event.clientY - canvasBox.top;
-        console.log("x: " + mouseCoordX, "y: " + mouseCoordY);
+        // console.log("x: " + mouseCoordX, "y: " + mouseCoordY);
         
         setMouseCoordX(mouseCoordX);
         setMouseCoordY(mouseCoordY);
@@ -62,20 +93,11 @@ const Canvas = () => {
         targetsDropdown.style.left = (mouseCoordX + 26) + "px";
         targetsDropdown.style.top = (mouseCoordY - 26) + "px";
 
+        targetsDropdown.selectedIndex = 0;
+        setObject('option0');
     }
 
-    const getOption = (elem) => {
-        let selectedOption = elem.target.value;
-        setObject(selectedOption);
-        console.log(selectedOption);
-
-        // let targetBox = document.querySelector('.targetBox');
-        // targetBox.style.display = "none";
-        // let targetsDropdown = document.querySelector('.targetsDropdown');
-        // targetsDropdown.style.display = "none";
-    }
-
-    const checkTarget = () => {
+    const checkTarget = (object) => {
         // let objectBox = document.querySelector(`.${object}`).getBoundingClientRect();
         let leftBound = fruitCoords[object].left;
         let rightBound = fruitCoords[object].right;
@@ -85,9 +107,26 @@ const Canvas = () => {
 
         if (mouseCoordX > leftBound && mouseCoordX < rightBound && mouseCoordY > topBound && mouseCoordY < bottomBound) {
             console.log("Found a match!");
+            setFoundObjects({...foundObjects,
+                [object]: {isFound: true}
+            })
+
         } else {
             console.log("not a match!");
         }
+    }
+
+    const handleChange = (event) => {
+        setObject(event.target.value);
+        
+        if (event.target.value !== 'option0') {
+            checkTarget(event.target.value);
+        }
+
+        let targetBox = document.querySelector('.targetBox');
+        targetBox.style.display = "none";
+        let targetsDropdown = document.querySelector('.targetsDropdown');
+        targetsDropdown.style.display = "none";
     }
 
         
@@ -97,7 +136,8 @@ const Canvas = () => {
                 <img className="photo" src={fruit} alt="fruit"></img>
                 <div className="targetBox"></div>
                 
-                <select className="targetsDropdown" onChange={(e) => getOption(e)}>
+                <select className="targetsDropdown" onChange={handleChange}>
+                    <option defaultValue value="option0">Choose an option</option>
                     <option value="option1">avocado</option>
                     <option value="option2">grapefruit</option>
                     <option value="option3">orange</option>
