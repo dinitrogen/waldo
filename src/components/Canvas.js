@@ -1,44 +1,42 @@
 import React, {useEffect, useState} from 'react';
 import fruit from '../img/fruit.jpg';
-import { app, db, collection, getDocs } from '../firebase';
+import { app, db, collection, getDocs, getDoc, doc } from '../firebase';
 
-
-
-
-const fruitCoords = {
-    option0: {
-        name: 'none',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0
-    },
-    option1: {
-        name: 'avocado',
-        left: 275,
-        right: 375,
-        top: 126,
-        bottom: 264
-    },
-    option2: {
-        name: 'grapefruit',
-        left: 400,
-        right: 543,
-        top: 280,
-        bottom: 424
-    },
-    option3: {
-        name: 'orange',
-        left: 590,
-        right: 702,
-        top: 186,
-        bottom: 293
-    }
-}
+// const fruitCoords = {
+//     option0: {
+//         name: 'none',
+//         left: 0,
+//         right: 0,
+//         top: 0,
+//         bottom: 0
+//     },
+//     option1: {
+//         name: 'avocado',
+//         left: 275,
+//         right: 375,
+//         top: 126,
+//         bottom: 264
+//     },
+//     option2: {
+//         name: 'grapefruit',
+//         left: 400,
+//         right: 543,
+//         top: 280,
+//         bottom: 424
+//     },
+//     option3: {
+//         name: 'orange',
+//         left: 590,
+//         right: 702,
+//         top: 186,
+//         bottom: 293
+//     }
+// }
 
 const Canvas = () => {
     
-    const [testMessage, setTestMessage] = useState('');
+    const [resultText, setResultText] = useState('');
+    const [winMessage, setWinMessage] = useState('');
 
     const [mouseCoordX, setMouseCoordX] = useState(0);
     const [mouseCoordY, setMouseCoordY] = useState(0);
@@ -55,18 +53,21 @@ const Canvas = () => {
         }
     });
 
-    // Testing firestore
-    async function waldoTest() {
-        const querySnapshot = await getDocs(collection(db, "waldo-test"));
-        querySnapshot.forEach((doc) => {
-            console.log(doc.data().name);
-            setTestMessage(doc.data().name)
-        });
-    }
+    
+    // async function fruitTest() {
+    //     const docRef = doc(db, "hiddenObjects", "fruit");
+    //     const docSnap = await getDoc(docRef);
+
+    //     if (docSnap.exists()) {
+    //         console.log(docSnap.data().option1.left);
+    //     } else {
+    //         console.log("No such document");
+    //     }
+    // }
    
-    useEffect(() => {
-        waldoTest();
-    }, [])
+    // useEffect(() => {
+    //     fruitTest();
+    // }, [])
 
 
     useEffect(() => {
@@ -75,7 +76,8 @@ const Canvas = () => {
 
     const checkFoundList = () => {
         if (foundObjects.option1.isFound === true && foundObjects.option2.isFound === true && foundObjects.option3.isFound === true) {
-            console.log('you win!');
+            // console.log('you win!');
+            setWinMessage('YOU WIN!');
         } else {
             return;
         }
@@ -87,7 +89,6 @@ const Canvas = () => {
             return;
         }
         let canvasBox = document.querySelector('.canvasDiv').getBoundingClientRect();
-        // let canvasBox = event.target.getBoundingClientRect();
         let mouseCoordX = (event.clientX > canvasBox.right) ? canvasBox.right : event.clientX - canvasBox.left;
         let mouseCoordY = (event.clientY > canvasBox.bottom) ? canvasBox.bottom : event.clientY - canvasBox.top;
         // console.log("x: " + mouseCoordX, "y: " + mouseCoordY);
@@ -107,24 +108,31 @@ const Canvas = () => {
 
         targetsDropdown.selectedIndex = 0;
         setObject('option0');
+        setResultText('');
     }
 
-    const checkTarget = (object) => {
-        // let objectBox = document.querySelector(`.${object}`).getBoundingClientRect();
-        let leftBound = fruitCoords[object].left;
-        let rightBound = fruitCoords[object].right;
-        let topBound = fruitCoords[object].top;
-        let bottomBound = fruitCoords[object].bottom;
-        
+    async function checkTarget(object) {
+
+        const docRef = doc(db, "hiddenObjects", "fruit");
+        const docSnap = await getDoc(docRef);
+    
+        let leftBound = docSnap.data()[object].left;
+        let rightBound = docSnap.data()[object].right;
+        let topBound = docSnap.data()[object].top;
+        let bottomBound = docSnap.data()[object].bottom;
+
+
 
         if (mouseCoordX > leftBound && mouseCoordX < rightBound && mouseCoordY > topBound && mouseCoordY < bottomBound) {
-            console.log("Found a match!");
+            // console.log("Found a match!");
+            setResultText('Found a match!');
             setFoundObjects({...foundObjects,
                 [object]: {isFound: true}
             })
 
         } else {
-            console.log("not a match!");
+            // console.log("not a match!");
+            setResultText('Try again!');
         }
     }
 
@@ -156,7 +164,8 @@ const Canvas = () => {
                 </select>
 
             </div>
-            <div>{testMessage}</div>
+            <div>{resultText}</div>
+            <div>{winMessage}</div>
         </div>
     )
                     
