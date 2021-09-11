@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import fruit from '../img/fruit.jpg';
 import { app, db, collection, getDocs, getDoc, doc } from '../firebase';
+import App from '../App';
 
 // const fruitCoords = {
 //     option0: {
@@ -33,25 +34,16 @@ import { app, db, collection, getDocs, getDoc, doc } from '../firebase';
 //     }
 // }
 
-const Canvas = () => {
+const Canvas = ({elapsedTime, winMessage, handleFoundObject}) => {
     
     const [resultText, setResultText] = useState('');
-    const [winMessage, setWinMessage] = useState('');
+    
 
     const [mouseCoordX, setMouseCoordX] = useState(0);
     const [mouseCoordY, setMouseCoordY] = useState(0);
     const [object, setObject] = useState('option0');
-    const [foundObjects, setFoundObjects] = useState({
-        option1: {
-            isFound: false
-        },
-        option2: {
-            isFound: false
-        },
-        option3: {
-            isFound: false
-        }
-    });
+    
+    
 
     
     // async function fruitTest() {
@@ -70,19 +62,7 @@ const Canvas = () => {
     // }, [])
 
 
-    useEffect(() => {
-        checkFoundList();
-    });
-
-    const checkFoundList = () => {
-        if (foundObjects.option1.isFound === true && foundObjects.option2.isFound === true && foundObjects.option3.isFound === true) {
-            // console.log('you win!');
-            setWinMessage('YOU WIN!');
-        } else {
-            return;
-        }
-    }
-
+    
     const drawTargetBox = (event) => {
         // console.log(event.target);
         if (event.target === document.querySelector('select')) {
@@ -126,9 +106,10 @@ const Canvas = () => {
         if (mouseCoordX > leftBound && mouseCoordX < rightBound && mouseCoordY > topBound && mouseCoordY < bottomBound) {
             // console.log("Found a match!");
             setResultText('Found a match!');
-            setFoundObjects({...foundObjects,
-                [object]: {isFound: true}
-            })
+            
+            handleFoundObject(object);
+            
+            
 
         } else {
             // console.log("not a match!");

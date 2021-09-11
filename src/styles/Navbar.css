@@ -1,0 +1,13 @@
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.objectList {
+    display: flex;
+}
+
+.object {
+    padding: 1rem;
+}
