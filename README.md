@@ -11,9 +11,9 @@ Hosted with Firebase
 
 The goal of this game is to locate and identify all of the hidden objects. Click on the image to display a targeting box, then select the correct object from the dropdown menu. Find all of the objects to win and register your score to the online leaderboard!
 
-## Current status (9/12/2021)
+## Current status (9/13/2021)
 
-Currently only a simple image and version of the game is available (proof of concept), but more updates are coming in the near future, including updates to the UI and addition of more challenging images.
+Currently only a single level is available, but more additional levels will be added in the near future, as well as some updates and improvements to the UI.
 
 ## Tools
 
@@ -21,3 +21,8 @@ Currently only a simple image and version of the game is available (proof of con
 - React Router
 - Firebase hosting
 - Cloud Firestore for fetching object coordinates
+
+## Credits
+
+- Pokemon collage by [Szuja94](https://imgur.com/t/pokemongo/Ygr20aY)
+- [Pokemon images](https://www.pokemon.com/us/pokedex/)
