@@ -21,27 +21,32 @@ nav {
 }
 
 .object {
-    padding: 1rem;
+    padding: 1vw;
     display: flex;
-    height: 75px
+    height: 10vw;
+    max-height:5rem;
+}
+
+.objectText {
+    font-size: 2vw;
 }
 
 .startButton {
-    padding: 20px;
-    font-size: 20px;
+    padding: 2vw;
+    font-size: 3vw;
     border-radius: 10px;
 }
 
 .leaderboardButton {
-    padding: 20px;
-    font-size: 20px;
+    padding: 2vw;
+    font-size: 3vw;
     border-radius: 10px;
 }
 
 .onScreenTimer {
-    font-size: 20px;
+    font-size: 3vw;
 }
 
 .timeText {
-    font-size: 40px;
+    font-size: 6vw;
 }

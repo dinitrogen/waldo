@@ -21,7 +21,7 @@ const Navbar = ({objects, currentTime, handleClick}) => {
                     objects.map((object) => {
                         return (
                             <div key={object.listId}><img className={`object ${object.optionNum}`} src={object.img} alt="object"></img>
-                                <span>{object.name}</span>
+                                <span className='objectText'>{object.name}</span>
                             </div>
                         )
                     })
