@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
 
-const Navbar = ({object1, object2, object3, currentTime, handleClick}) => {
+
+const Navbar = ({objects, currentTime, handleClick}) => {
 
     return (
         <nav>
@@ -15,13 +16,21 @@ const Navbar = ({object1, object2, object3, currentTime, handleClick}) => {
             </Link>
 
             <div className="objectList">
-                <div className="object option1">{object1}</div>
-                <div className="object option2">{object2}</div>
-                <div className="object option3">{object3}</div>
+                
+                {
+                    objects.map((object) => {
+                        return (
+                            <div key={object.listId}><img className={`object ${object.optionNum}`} src={object.img} alt="object"></img>
+                                <span>{object.name}</span>
+                            </div>
+                        )
+                    })
+                }
+
             </div>
 
             <div className="onScreenTimer">
-                <div>Time: {currentTime}</div>
+                <div>Time:</div><div className="timeText">{currentTime}</div>
             </div>
 
         </nav>

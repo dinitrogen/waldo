@@ -7,11 +7,42 @@ import Navbar from './components/Navbar';
 import Leaderboard from './components/Leaderboard';
 import './App.css';
 import './styles/Canvas.css';
+import pokemon from './img/pokemon.jpg';
+import mew from './img/mew.png';
+import timburr from './img/timburr.png';
+import absol from './img/absol.png';
 
 const App = () => {
 
   let history = useHistory();
   
+  const [level, setLevel] = useState(pokemon);
+  const [levelName, setLevelName] = useState('pokemon');
+  const [objects, setObjects] = useState([
+      {
+          name: 'Mew',
+          img: mew,
+          id: uniqid(),
+          listId: uniqid(),
+          optionNum: 'option1'
+      },
+      {
+          name: 'Timburr',
+          img: timburr,
+          id: uniqid(),
+          listId: uniqid(),
+          optionNum: 'option2'
+      },
+      {
+          name: 'Absol',
+          img: absol,
+          id: uniqid(),
+          listId: uniqid(),
+          optionNum: 'option3'
+      },
+    ])
+
+
   const [elapsedTime, setElapsedTime] = useState(0);
   const [gameActive, setGameActive] = useState(false);
   const [winMessage, setWinMessage] = useState('');
@@ -48,6 +79,7 @@ const App = () => {
       setWinMessage('');
       document.querySelectorAll('.object').forEach((elem) => {
         elem.style.color='black';
+        elem.style.opacity='1';
       });
   }
 
@@ -66,7 +98,8 @@ const App = () => {
     setFoundObjects({...foundObjects,
       [object]: {isFound: true}
     });
-    document.querySelector(`.${object}`).style.color='green';
+    
+    document.querySelector(`.${object}`).style.opacity='0.3';
   }
 
 
@@ -91,7 +124,7 @@ const App = () => {
     document.querySelector('.startButton').disabled = false;
     document.querySelector('.leaderboardButton').disabled = false;
     setWinMessage(`YOU WIN! - ${elapsedTime} s`);
-    promptUserforName();
+    promptUserforName(levelName);
     setGameActive(false);
     history.replace('/leaderboard');
   
@@ -99,7 +132,7 @@ const App = () => {
 
   
 
-  const promptUserforName = async () => {
+  const promptUserforName = async (levelName) => {
     let userName = prompt(`You win (${elapsedTime}s)! Enter your name`);
     const userScoreData = {
       name: userName,
@@ -108,7 +141,7 @@ const App = () => {
       id: uniqid()
     }
     
-    await updateDoc(doc(db, "leaderboards", "fruit"), {leaders: arrayUnion(userScoreData)});
+    await updateDoc(doc(db, "leaderboards", levelName), {leaders: arrayUnion(userScoreData)});
     
   }
 
@@ -118,9 +151,8 @@ const App = () => {
     
       <div className="App">
         <Navbar
-          object1="avocado"
-          object2="grapefruit"
-          object3="orange"
+          
+          objects={objects}
           currentTime={elapsedTime}
           handleClick={startNewGame} />
         <Switch>
@@ -129,10 +161,14 @@ const App = () => {
               elapsedTime={elapsedTime}
               winMessage={winMessage}
               handleFoundObject={handleFoundObject}
+              level={level}
+              objects={objects}
               />
           </Route>
           <Route exact path="/leaderboard">
-            <Leaderboard />
+            <Leaderboard 
+              levelName={levelName}
+            />
           </Route>
         
         </Switch>

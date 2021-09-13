@@ -1,7 +1,19 @@
 nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 150px;
+    z-index: 2;
+
+    color: white;
+    background-color:rgb(80, 80, 80);
+
     display: flex;
     justify-content: space-around;
     align-items: center;
+    
+    
+   
 }
 
 .objectList {
@@ -10,4 +22,26 @@ nav {
 
 .object {
     padding: 1rem;
+    display: flex;
+    height: 75px
+}
+
+.startButton {
+    padding: 20px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.leaderboardButton {
+    padding: 20px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.onScreenTimer {
+    font-size: 20px;
+}
+
+.timeText {
+    font-size: 40px;
 }

@@ -1,0 +1,22 @@
+.leaderboard {
+    
+    position: absolute;
+    width:100%;
+    top: 150px;
+    bottom: 0;
+    color: white;
+    background-color: rgb(80, 80, 80);
+
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.leaderboardList {
+    display:flex;
+    justify-content: center;
+}
+
+h3 {
+    text-transform: capitalize;
+}

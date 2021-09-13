@@ -1,50 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import fruit from '../img/fruit.jpg';
+import pokemon from '../img/pokemon.jpg';
+import mew from '../img/mew.png';
+import timburr from '../img/timburr.png';
+import absol from '../img/absol.png';
 import { app, db, collection, getDocs, getDoc, doc } from '../firebase';
 import App from '../App';
+import uniqid from 'uniqid';
 
-// const fruitCoords = {
-//     option0: {
-//         name: 'none',
-//         left: 0,
-//         right: 0,
-//         top: 0,
-//         bottom: 0
-//     },
-//     option1: {
-//         name: 'avocado',
-//         left: 275,
-//         right: 375,
-//         top: 126,
-//         bottom: 264
-//     },
-//     option2: {
-//         name: 'grapefruit',
-//         left: 400,
-//         right: 543,
-//         top: 280,
-//         bottom: 424
-//     },
-//     option3: {
-//         name: 'orange',
-//         left: 590,
-//         right: 702,
-//         top: 186,
-//         bottom: 293
-//     }
-// }
 
-const Canvas = ({elapsedTime, winMessage, handleFoundObject}) => {
+const Canvas = ({elapsedTime, winMessage, handleFoundObject, level, objects}) => {
     
     const [resultText, setResultText] = useState('');
     
-
     const [mouseCoordX, setMouseCoordX] = useState(0);
     const [mouseCoordY, setMouseCoordY] = useState(0);
-    const [object, setObject] = useState('option0');
-    
-    
-
+   
     
     // async function fruitTest() {
     //     const docRef = doc(db, "hiddenObjects", "fruit");
@@ -69,6 +40,7 @@ const Canvas = ({elapsedTime, winMessage, handleFoundObject}) => {
             return;
         }
         let canvasBox = document.querySelector('.canvasDiv').getBoundingClientRect();
+        
         let mouseCoordX = (event.clientX > canvasBox.right) ? canvasBox.right : event.clientX - canvasBox.left;
         let mouseCoordY = (event.clientY > canvasBox.bottom) ? canvasBox.bottom : event.clientY - canvasBox.top;
         // console.log("x: " + mouseCoordX, "y: " + mouseCoordY);
@@ -79,27 +51,29 @@ const Canvas = ({elapsedTime, winMessage, handleFoundObject}) => {
         let targetBox = document.querySelector('.targetBox');
         targetBox.style.display = "block";
         targetBox.style.left = (mouseCoordX - 10) + "px";
-        targetBox.style.top = (mouseCoordY - 10) + "px";
+        targetBox.style.top = (mouseCoordY + 140) + "px";
 
         let targetsDropdown = document.querySelector('.targetsDropdown');
         targetsDropdown.style.display = "block";
         targetsDropdown.style.left = (mouseCoordX + 26) + "px";
-        targetsDropdown.style.top = (mouseCoordY - 26) + "px";
+        targetsDropdown.style.top = (mouseCoordY + 130) + "px";
 
         targetsDropdown.selectedIndex = 0;
-        setObject('option0');
         setResultText('');
     }
 
-    async function checkTarget(object) {
+    async function checkTarget(level, object) {
 
-        const docRef = doc(db, "hiddenObjects", "fruit");
+        const docRef = doc(db, "hiddenObjects", level);
         const docSnap = await getDoc(docRef);
     
-        let leftBound = docSnap.data()[object].left;
-        let rightBound = docSnap.data()[object].right;
-        let topBound = docSnap.data()[object].top;
-        let bottomBound = docSnap.data()[object].bottom;
+        let canvasWidth = document.querySelector('.canvasDiv').offsetWidth;
+        let scaleFactor = canvasWidth / 1000;
+
+        let leftBound = docSnap.data()[object].left * scaleFactor;
+        let rightBound = docSnap.data()[object].right * scaleFactor;
+        let topBound = docSnap.data()[object].top * scaleFactor;
+        let bottomBound = docSnap.data()[object].bottom * scaleFactor;
 
 
 
@@ -118,10 +92,10 @@ const Canvas = ({elapsedTime, winMessage, handleFoundObject}) => {
     }
 
     const handleChange = (event) => {
-        setObject(event.target.value);
+        
         
         if (event.target.value !== 'option0') {
-            checkTarget(event.target.value);
+            checkTarget('pokemon', event.target.value);
         }
 
         let targetBox = document.querySelector('.targetBox');
@@ -134,14 +108,18 @@ const Canvas = ({elapsedTime, winMessage, handleFoundObject}) => {
     return (
         <div className="canvasMarginDiv">
             <div className="canvasDiv" onClick={(e) => drawTargetBox(e)}>
-                <img className="photo" src={fruit} alt="fruit"></img>
+                <img className="photo" src={level} alt="Hidden object search"></img>
                 <div className="targetBox"></div>
                 
                 <select className="targetsDropdown" onChange={handleChange}>
                     <option defaultValue value="option0">Choose an option</option>
-                    <option value="option1">avocado</option>
-                    <option value="option2">grapefruit</option>
-                    <option value="option3">orange</option>
+                    {
+                        objects.map((object) => {
+                            return (
+                                <option key={object.id} value={object.optionNum}>{object.name}</option>
+                            );
+                        })
+                    }
                 </select>
 
             </div>
